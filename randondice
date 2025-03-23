@@ -1,0 +1,32 @@
+import random
+
+# Define 3x3 dice faces
+dice_faces_3x3 = {
+    1: ("-----", "|   |", "| ● |", "|   |", "-----"),
+    2: ("-----", "|●  |", "|   |", "|  ●|", "-----"),
+    3: ("-----", "|●  |", "| ● |", "|  ●|", "-----"),
+    4: ("-----", "|● ●|", "|   |", "|● ●|", "-----"),
+    5: ("-----", "|● ●|", "| ● |", "|● ●|", "-----"),
+    6: ("-----", "|● ●|", "|● ●|", "|● ●|", "-----"),
+}
+
+def roll_dice_3x3():
+    while True:
+        # Generate a random number between 1 and 6
+        dice_value = random.randint(1, 6)
+
+        # Print the rolled value
+        print(f"\nYou rolled: {dice_value}\n")
+
+        # Print the 3x3 visual representation
+        for line in dice_faces_3x3[dice_value]:
+            print(line)
+
+        # Ask the user if they want to roll again
+        choice = input("\nRoll again? (yes/no): ").strip().lower()
+        if choice not in ["yes", "y"]:
+            print("Thanks for playing! 🎲")
+            break
+
+if __name__ == "__main__":
+    roll_dice_3x3()
