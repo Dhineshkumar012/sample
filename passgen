@@ -1,0 +1,158 @@
+import random
+import string
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import simpledialog
+
+
+def generate_password(length, use_uppercase, use_lowercase, use_digits, use_special):
+    char_set = ""
+    required_chars = []
+
+    # Add selected character types to the set
+    if use_lowercase:
+        char_set += string.ascii_lowercase
+        required_chars.append(random.choice(string.ascii_lowercase))
+    if use_uppercase:
+        char_set += string.ascii_uppercase
+        required_chars.append(random.choice(string.ascii_uppercase))
+    if use_digits:
+        char_set += string.digits
+        required_chars.append(random.choice(string.digits))
+    if use_special:
+        char_set += string.punctuation
+        required_chars.append(random.choice(string.punctuation))
+
+    # Ensure at least one character type is selected
+    if not char_set:
+        return None
+
+    # Generate remaining random characters to fill the length
+    remaining_length = length - len(required_chars)
+    password_chars = required_chars + [random.choice(char_set) for _ in range(remaining_length)]
+
+    # Shuffle to avoid predictable patterns
+    random.shuffle(password_chars)
+    return "".join(password_chars)
+
+
+def generate_multiple_passwords():
+    try:
+        num_passwords = int(simpledialog.askstring("Input", "Enter the number of passwords to generate:"))
+        length = int(length_entry.get())
+
+        if num_passwords <= 0 or length <= 0:
+            messagebox.showerror("Error", "Number of passwords and length must be greater than 0.")
+            return
+
+        passwords = []
+        for _ in range(num_passwords):
+            password = generate_password(
+                length,
+                use_uppercase_var.get(),
+                use_lowercase_var.get(),
+                use_digits_var.get(),
+                use_special_var.get(),
+            )
+            if password:
+                passwords.append(password)
+
+        if passwords:
+            result_text.delete(1.0, tk.END)
+            result_text.insert(tk.END, "\n".join(passwords))
+            messagebox.showinfo("Success", f"{num_passwords} password(s) generated successfully!")
+        else:
+            messagebox.showerror("Error", "Could not generate passwords. Check your inputs.")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
+
+
+def copy_to_clipboard():
+    password = result_text.get(1.0, tk.END).strip()
+    if password:
+        root.clipboard_clear()
+        root.clipboard_append(password)
+        root.update()
+        messagebox.showinfo("Success", "Password(s) copied to clipboard!")
+    else:
+        messagebox.showerror("Error", "No password(s) to copy!")
+
+
+def generate_single_password():
+    try:
+        length = int(length_entry.get())
+        if length <= 0:
+            messagebox.showerror("Error", "Password length must be greater than 0.")
+            return
+
+        password = generate_password(
+            length,
+            use_uppercase_var.get(),
+            use_lowercase_var.get(),
+            use_digits_var.get(),
+            use_special_var.get(),
+        )
+
+        if password:
+            result_text.delete(1.0, tk.END)
+            result_text.insert(tk.END, password)
+            messagebox.showinfo("Success", "Password generated successfully!")
+        else:
+            messagebox.showerror("Error", "Could not generate a password. Check your selections.")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter a valid number.")
+
+
+# Create main application window
+root = tk.Tk()
+root.title("🔐 Password Generator")
+root.geometry("500x500")
+root.configure(bg="#f0f0f0")
+
+# Heading
+heading_label = tk.Label(root, text="🔐 Secure Password Generator", font=("Arial", 16, "bold"), bg="#f0f0f0", fg="#333")
+heading_label.pack(pady=10)
+
+# Password length input
+length_label = tk.Label(root, text="Password Length:", font=("Arial", 12), bg="#f0f0f0")
+length_label.pack()
+length_entry = tk.Entry(root, width=10, font=("Arial", 12))
+length_entry.pack(pady=5)
+
+# Checkboxes for character types
+use_uppercase_var = tk.BooleanVar()
+use_lowercase_var = tk.BooleanVar()
+use_digits_var = tk.BooleanVar()
+use_special_var = tk.BooleanVar()
+
+uppercase_check = tk.Checkbutton(root, text="Include Uppercase Letters (A-Z)", variable=use_uppercase_var, bg="#f0f0f0")
+uppercase_check.pack(anchor="w", padx=50)
+lowercase_check = tk.Checkbutton(root, text="Include Lowercase Letters (a-z)", variable=use_lowercase_var, bg="#f0f0f0")
+lowercase_check.pack(anchor="w", padx=50)
+digits_check = tk.Checkbutton(root, text="Include Digits (0-9)", variable=use_digits_var, bg="#f0f0f0")
+digits_check.pack(anchor="w", padx=50)
+special_check = tk.Checkbutton(root, text="Include Special Characters (!@#$)", variable=use_special_var, bg="#f0f0f0")
+special_check.pack(anchor="w", padx=50)
+
+# Buttons
+single_button = tk.Button(root, text="Generate Single Password", command=generate_single_password, bg="#4caf50",
+                          fg="white", font=("Arial", 12, "bold"))
+single_button.pack(pady=5)
+
+multi_button = tk.Button(root, text="Generate Multiple Passwords", command=generate_multiple_passwords, bg="#2196f3",
+                         fg="white", font=("Arial", 12, "bold"))
+multi_button.pack(pady=5)
+
+copy_button = tk.Button(root, text="Copy to Clipboard", command=copy_to_clipboard, bg="#ff9800", fg="white",
+                        font=("Arial", 12, "bold"))
+copy_button.pack(pady=5)
+
+# Display generated password(s)
+result_label = tk.Label(root, text="Generated Password(s):", font=("Arial", 12, "bold"), bg="#f0f0f0")
+result_label.pack(pady=5)
+
+result_text = tk.Text(root, height=8, width=50, font=("Arial", 12))
+result_text.pack(pady=5)
+
+# Run the application
+root.mainloop()
