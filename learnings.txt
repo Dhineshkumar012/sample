@@ -1,0 +1,18 @@
+python -m dis .\screenshot.py 
+
+The dis module disassembles the Python bytecode of the given script (screenshot.py) and displays its low-level bytecode instructions. This is useful for:
+
+✅ Debugging or analyzing the efficiency of the code.
+✅ Understanding how Python translates high-level code into bytecode.
+✅ Exploring the behavior of compiled .pyc files.
+
+Explanation:
+python -m dis
+-m tells Python to run a module as a script.
+dis is the disassembler module in Python, which converts Python bytecode into a more readable format, helping developers understand how their code is executed by the Python interpreter.
+.\screenshot.py
+Refers to the Python script screenshot.py located in the current directory (. denotes the current directory in Windows).
+
+
+------------------------
+
