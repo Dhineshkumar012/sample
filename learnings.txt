@@ -56,3 +56,10 @@ class NoneType(object)
  |  __new__(*args, **kwargs)
  |      Create and return a new object.  See help(type) for accurate signature.
 
+
+--------------------------------------------------------
+For documentation
+
+https://docs.python.org/3.13/
+
+
